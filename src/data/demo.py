@@ -1,7 +1,7 @@
 import googleapiclient.discovery
 
 # Thay thế 'YOUR_API_KEY' bằng API key của bạn
-api_key = 'YOUR_API_KEY'
+api_key = 'AIzaSyAPD2awoKWWsP6h33TGJFBdiRi7PBYz7pY'
 youtube = googleapiclient.discovery.build('youtube', 'v3', developerKey=api_key)
 
 def get_channel_videos(channel_id):
