@@ -1,0 +1,12 @@
+# env.yaml
+mongodb:
+  host: $DATABASE_HOST
+  username: root
+  password: $DB_PASSWORD
+  database: youtube_db
+
+mysql:
+  host: $DATABASE_HOST
+  username: root
+  password: $DB_PASSWORD
+  database: youtube_db
