@@ -4,6 +4,8 @@ mongodb:
   username: root
   password: $DB_PASSWORD
   database: youtube_db
+  collections:
+    playlists: playlists
 
 mysql:
   host: $DATABASE_HOST
