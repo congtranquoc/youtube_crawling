@@ -1,10 +1,9 @@
 import time
-from random import random
 
 import googleapiclient.discovery
-import json
 
-from config.MongoConnector import MongoManager
+from mongodb.MongoConnector import MongoManager
+
 
 
 class GetAllPlaylist():
