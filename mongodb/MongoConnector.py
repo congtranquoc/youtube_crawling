@@ -37,13 +37,13 @@ class MongoManager:
         self.mongo = self.client[self.database]
 
     def is_connected(self):
-        if self.client and self.client.connected:
+        if self.client is not None:
             return True
         return False
     def insert_many_to_playplists(self, datas):
         if not self.is_connected():
             self.connect()
-        playlists = self.collections["playlists"]
+        playlists = self.mongo.get_collection(self.collections["playlists"])
         playlists.insert_many(datas)
 
 
