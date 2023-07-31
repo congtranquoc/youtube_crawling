@@ -46,6 +46,11 @@ class MongoManager:
         playlists = self.mongo.get_collection(self.collections["playlists"])
         playlists.insert_many(datas)
 
+    def insert_many_to_video_ids(self, datas):
+        if not self.is_connected():
+            self.connect()
+        videos = self.mongo.get_collection(self.collections["videoids"])
+        videos.insert_many(datas)
 
     def close_connection(self):
         if self.client is not None:
