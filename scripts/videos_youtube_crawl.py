@@ -12,7 +12,7 @@ class VideosYoutubeCrawler:
         self.CHANNEL_ID = os.getenv('CHANNEL_ID')
 
         self.state_file = '../data/craw/videos_data/state.json'
-        self.output_file = '../data/craw/videos_data/videos.json'
+        self.output_file = '../data/craw/videos_data/{}'
 
     def get_videos_from_playlist(self, playlist_id, next_page_token=None):
         youtube = build('youtube', 'v3', developerKey=self.API_KEY)
@@ -43,7 +43,7 @@ class VideosYoutubeCrawler:
             return state_data.get('page_token', [])
         return None
 
-    def run(self, playlist_id):
+    def run(self, playlist_id, output_path):
         page_token = self.load_state_from_json()
 
         if page_token is None:
@@ -62,7 +62,7 @@ class VideosYoutubeCrawler:
             if not next_page_token:
                 break
 
-        with open(self.output_file, 'w', encoding='utf-8') as file:
+        with open(self.output_file.format(output_path), 'w', encoding='utf-8') as file:
             json.dump(all_videos, file, ensure_ascii=False)
 
     def get_data(self):
