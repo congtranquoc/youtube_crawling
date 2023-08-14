@@ -1,18 +1,13 @@
-import os
-import json
 import time
-
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
+from modules.general_classes import *
 
 class VideosYoutubeCrawler:
     def __init__(self):
         load_dotenv()
         self.API_KEY = os.getenv('youtube_api_key')
         self.CHANNEL_ID = os.getenv('CHANNEL_ID')
-
-        self.state_file = '../data/craw/videos_data/state.json'
-        self.output_file = '../data/craw/videos_data/{}'
 
     def get_videos_from_playlist(self, playlist_id, next_page_token=None):
         youtube = build('youtube', 'v3', developerKey=self.API_KEY)
@@ -32,41 +27,27 @@ class VideosYoutubeCrawler:
             print("An Error occurs: ", str(e))
             return None, None
 
-    def save_state_to_json(self, page_token):
-        with open(self.state_file, 'w') as f:
-            json.dump({'page_token': page_token}, f)
+    def run(self, playlist_id, collection):
+        continue_key = read_json('../data/craw/playlists_channel_data/state.json')
 
-    def load_state_from_json(self):
-        if os.path.exists(self.state_file):
-            with open(self.state_file, 'r') as f:
-                state_data = json.load(f)
-            return state_data.get('page_token', [])
-        return None
-
-    def run(self, playlist_id, output_path):
-        page_token = self.load_state_from_json()
-
-        if page_token is None:
+        if continue_key is None:
             page_token = ''
-
+        else:
+            page_token = continue_key.get('page_token')
         all_videos = []
 
         while True:
             videos, next_page_token = self.get_videos_from_playlist(playlist_id, page_token)
             if videos is None:
-                self.save_state_to_json(page_token)
+                save_json({'page_token': page_token}, '../data/craw/playlists_channel_data/state.json')
                 continue
+            for item in videos:
+                item['playlist_program'] = collection
+
             all_videos.extend(videos)
             page_token = next_page_token
 
             if not next_page_token:
                 break
+        save_merge_json(all_videos, f'../data/craw/videos_data/all_video.json')
 
-        with open(self.output_file.format(output_path), 'w', encoding='utf-8') as file:
-            json.dump(all_videos, file, ensure_ascii=False)
-
-    def get_data(self):
-        # Lưu dữ liệu JSON vào thư mục data/raw với tên tệp là filename
-        with open(self.output_file, "r", encoding="utf-8") as file:
-            data = json.load(file)
-            return data
