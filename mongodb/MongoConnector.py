@@ -40,17 +40,12 @@ class MongoManager:
         if self.client is not None:
             return True
         return False
-    def insert_many_to_playplists(self, datas):
-        if not self.is_connected():
-            self.connect()
-        playlists = self.mongo.get_collection(self.collections["playlists"])
-        playlists.insert_many(datas)
 
-    def insert_many_to_video_ids(self, datas, collection):
+    def insert_many(self, datas, collection):
         if not self.is_connected():
             self.connect()
-        videos = self.mongo.get_collection(self.collections[collection])
-        videos.insert_many(datas)
+        database = self.mongo.get_collection(self.collections[collection])
+        database.insert_many(datas)
 
     def close_connection(self):
         if self.client is not None:

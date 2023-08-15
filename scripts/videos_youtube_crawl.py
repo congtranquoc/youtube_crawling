@@ -8,11 +8,11 @@ class VideosYoutubeCrawler:
         load_dotenv()
         self.API_KEY = os.getenv('youtube_api_key')
         self.CHANNEL_ID = os.getenv('CHANNEL_ID')
+        self.youtube = build('youtube', 'v3', developerKey=self.API_KEY)
 
     def get_videos_from_playlist(self, playlist_id, next_page_token=None):
-        youtube = build('youtube', 'v3', developerKey=self.API_KEY)
         try:
-            playlist_items = youtube.playlistItems().list(
+            playlist_items = self.youtube.playlistItems().list(
                 part='snippet',
                 playlistId=playlist_id,
                 maxResults=50,
@@ -24,10 +24,10 @@ class VideosYoutubeCrawler:
             time.sleep(1)
             return _videos, _next_page_token
         except Exception as e:
-            print("An Error occurs: ", str(e))
+            print("VideosYoutubeCrawler has an error occurs: ", str(e))
             return None, None
 
-    def run(self, playlist_id, collection):
+    def crawl_data(self, playlist_id, collection):
         continue_key = read_json('../data/craw/playlists_channel_data/state.json')
 
         if continue_key is None:

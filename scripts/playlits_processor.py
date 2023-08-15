@@ -1,7 +1,6 @@
 import json
 import os
 
-
 def get_id_playlists(uri_path):
     target_titles = {
         "Rap Việt": "[ LIVE STAGE ] | Rap Việt Mùa 3 (2023)",

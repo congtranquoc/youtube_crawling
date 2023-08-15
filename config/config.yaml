@@ -6,8 +6,9 @@ mongodb:
   database: youtube_db
   collections:
     playlists: playlists
-    videoids_rapvie: videoids_rapvie
-    videoids_nala: videoids_nala
+    videoids: videoids
+    commentvideo: commentvideo
+    statics: statics
 
 mysql:
   host: $DATABASE_HOST

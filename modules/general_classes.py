@@ -31,7 +31,7 @@ def save_json(new_json_data, uri_path):
 def read_json(uri_path):
     saved_json_path = os.path.join(uri_path)
     if os.path.exists(saved_json_path):
-        with open(saved_json_path, 'r') as f:
+        with open(saved_json_path, 'r',  encoding="UTF-8") as f:
             data = json.load(f)
             return data
     else:
@@ -45,12 +45,12 @@ def save_merge_json(new_json_data, uri_path):
             with open(saved_json_path, 'r', encoding="UTF-8") as file:
                 saved_data = json.load(file)
 
-            saved_data.extend(new_json_data)
+            unique_dicts = [d for d in new_json_data if d not in saved_data]
+            saved_data.extend(unique_dicts)
             with open(saved_json_path, 'w', encoding="UTF-8") as file:
                 json.dump(saved_data, file, indent=4, ensure_ascii=False)
         else:
             with open(saved_json_path, 'w', encoding="UTF-8") as file:
                 json.dump(new_json_data, file, indent=4, ensure_ascii=False)
     except Exception as e:
-        print("Error occurs: ", str(e))
-
+        print("save_merge_json - Error occurs: ", str(e))
