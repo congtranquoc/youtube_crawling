@@ -67,7 +67,8 @@ class ViewLikeCommentCrawler:
             video_comment = self.get_video_comments(item["video_id"])
             if video_comment:
                 for comment in video_comment:
-                    comment["playlist_program"] = item["playlist_program"]
+                    if comment:
+                        comment["playlist_program"] = item["playlist_program"]
                 list_comment.extend(video_comment)
 
         save_merge_json(list_statics, '../data/craw/like_share_cmt/video_statics.json')

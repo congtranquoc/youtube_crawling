@@ -40,19 +40,19 @@ def main():
     all_comments = read_json('../data/craw/like_share_cmt/comment_videos.json')
     all_statics = read_json('../data/craw/like_share_cmt/video_statics.json')
 
-    # #Thực hiện thêm vào database
-    if all_playlists:
-        print("Insert playlists")
-        mongo_connection.insert_many(all_playlists, "playlists")
-    if all_video_ids:
-        print("Insert Video Ids")
-        mongo_connection.insert_many(all_video_ids, "videoids")
-    if all_comments:
-        print("Insert Comments")
-        mongo_connection.insert_many(all_comments, "commentvideo")
-    if all_statics:
-        print("Insert statics")
-        mongo_connection.insert_many(all_statics, "statics")
+    # # #Thực hiện thêm vào database
+    # if all_playlists:
+    #     print("Insert playlists")
+    #     mongo_connection.insert_many(all_playlists, "playlists")
+    # if all_video_ids:
+    #     print("Insert Video Ids")
+    #     mongo_connection.insert_many(all_video_ids, "videoids")
+    # if all_comments:
+    #     print("Insert Comments")
+    #     mongo_connection.insert_many(all_comments, "commentvideo")
+    # if all_statics:
+    #     print("Insert statics")
+    #     mongo_connection.insert_many(all_statics, "statics")
 
 if __name__ == "__main__":
     main()

@@ -28,7 +28,7 @@ class VideosYoutubeCrawler:
             return None, None
 
     def crawl_data(self, playlist_id, collection):
-        continue_key = read_json('../data/craw/playlists_channel_data/state.json')
+        continue_key = read_json('../data/craw/videos_data/state.json')
 
         if continue_key is None:
             page_token = ''
@@ -39,7 +39,7 @@ class VideosYoutubeCrawler:
         while True:
             videos, next_page_token = self.get_videos_from_playlist(playlist_id, page_token)
             if videos is None:
-                save_json({'page_token': page_token}, '../data/craw/playlists_channel_data/state.json')
+                save_json({'page_token': page_token}, '../data/craw/videos_data/state.json')
                 continue
             for item in videos:
                 item['playlist_program'] = collection
