@@ -33,7 +33,7 @@ class ViewLikeCommentCrawler:
                     break
         except Exception as e:
             print('ViewLikeCommentCrawler-get_video_comments has an error occurred:', str(e))
-            return None, None
+            return None
         return comments
 
     def get_video_statics(self, video_id):
@@ -50,7 +50,7 @@ class ViewLikeCommentCrawler:
             return video_statics
         except Exception as e:
             print('ViewLikeCommentCrawler-get_video_statics has an error occurred:', str(e))
-            return None, None
+            return None
 
     def crawl_data(self, videos_ids: list):
         list_statics = []
@@ -61,7 +61,7 @@ class ViewLikeCommentCrawler:
             if video_statics:
                 for video in video_statics:
                     video["playlist_program"] = item["playlist_program"]
-                list_statics.extend(video_statics)
+                    list_statics.extend(video_statics)
                 print(f"video_id: {item['video_id']} ----- video_statics: {video_statics}")
 
             video_comment = self.get_video_comments(item["video_id"])
