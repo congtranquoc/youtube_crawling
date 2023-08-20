@@ -61,7 +61,7 @@ class ViewLikeCommentCrawler:
             if video_statics:
                 for video in video_statics:
                     video["playlist_program"] = item["playlist_program"]
-                    list_statics.extend(video_statics)
+                list_statics.extend(video_statics)
                 print(f"video_id: {item['video_id']} ----- video_statics: {video_statics}")
 
             video_comment = self.get_video_comments(item["video_id"])
