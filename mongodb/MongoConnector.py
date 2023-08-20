@@ -21,7 +21,7 @@ class MongoManager:
         self.mongodb_config = self.env['mongodb']
         self.host = self.mongodb_config['host']
         self.username = quote_plus(self.mongodb_config['username'])
-        self.pwd = quote_plus(self.mongodb_config['password'])
+        # self.pwd = quote_plus(self.mongodb_config['password'])
         self.database = self.mongodb_config['database']
         self.collections = self.mongodb_config["collections"]
         self.mongo = None

@@ -22,7 +22,7 @@ class MysqlManager:
         self.query = self.env['mysql.query']
         # Lấy thông tin kết nối từ biến môi trường
         self.user = self.env['mysql.username']
-        self.password = self.env['mysql.password']
+        # self.password = self.env['mysql.password']
         self.host = self.env['mysql.host']
         self.database = self.env['mysql.database']
         self.mysql_cnx = None
@@ -40,7 +40,7 @@ class MysqlManager:
         try:
             self.mysql_cnx = mysql.connector.connect(
                 user=self.user,
-                password=self.password,
+                # password=self.password,
                 host=self.host,
                 # database=self.database  # Thêm thông tin cơ sở dữ liệu vào kết nối
             )

@@ -1,8 +1,7 @@
 # env.yaml
 mongodb:
-  host: $DATABASE_HOST
+  host: localhost
   username: root
-  password: $DB_PASSWORD
   database: youtube_db
   collections:
     playlists: playlists
@@ -11,7 +10,6 @@ mongodb:
     statics: statics
 
 mysql:
-  host: $DATABASE_HOST
+  host: localhost
   username: root
-  password: $DB_PASSWORD
   database: youtube_db
