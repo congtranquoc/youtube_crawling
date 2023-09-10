@@ -1,19 +1,11 @@
-import os
-import json
-import time
-
-from googleapiclient.discovery import build
-
-from dotenv import load_dotenv
 from modules.general_classes import *
-class ViewLikeCommentCrawler:
+from scripts.YoutubeAPI import YouTubeAPI
 
-    def __init__(self):
-        load_dotenv()
-        self.API_KEY = os.getenv('youtube_api_key')
-        self.CHANNEL_ID = os.getenv('CHANNEL_ID')
-        self.youtube = build('youtube', 'v3', developerKey=self.API_KEY)
 
+class ViewLikeCommentCrawler(YouTubeAPI):
+    def __init__(self, video_ids):
+        super().__init__()
+        self.video_ids = video_ids
 
     def get_video_comments(self, video_id):
         comments = []
@@ -52,10 +44,10 @@ class ViewLikeCommentCrawler:
             print('ViewLikeCommentCrawler-get_video_statics has an error occurred:', str(e))
             return None
 
-    def crawl_data(self, videos_ids: list):
+    def crawl_data(self):
         list_statics = []
         list_comment = []
-        for item in videos_ids:
+        for item in self.video_ids:
             video_statics = self.get_video_statics(item["video_id"])
 
             if video_statics:

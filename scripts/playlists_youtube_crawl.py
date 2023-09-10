@@ -1,16 +1,15 @@
 import time
-
 import pandas as pd
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
 from modules.general_classes import *
+from scripts.YoutubeAPI import YouTubeAPI
 
-class PlaylistsCrawler:
-    def __init__(self):
-        load_dotenv()
-        self.API_KEY = os.getenv('youtube_api_key')
-        self.CHANNEL_ID = os.getenv('CHANNEL_ID')
-        self.youtube = build('youtube', 'v3', developerKey=self.API_KEY)
+
+class PlaylistsCrawler(YouTubeAPI):
+    def __init__(self, channel_id):
+        super().__init__()
+        self.CHANNEL_ID = channel_id
 
     def get_all_playlists(self, next_page_token=None):
         try:
@@ -41,7 +40,7 @@ class PlaylistsCrawler:
         while True:
             playlists, next_page_token = self.get_all_playlists(page_token)
             if playlists is None:
-                save_json({'page_token':page_token}, '../data/craw/playlists_channel_data/state.json')
+                save_json({'page_token': page_token}, '../data/craw/playlists_channel_data/state.json')
                 continue
             all_playlists.extend(playlists)
             page_token = next_page_token

@@ -1,20 +1,19 @@
 import time
-from googleapiclient.discovery import build
-from dotenv import load_dotenv
+import re
 from modules.general_classes import *
+from scripts.YoutubeAPI import YouTubeAPI
 
-class VideosYoutubeCrawler:
-    def __init__(self):
-        load_dotenv()
-        self.API_KEY = os.getenv('youtube_api_key')
-        self.CHANNEL_ID = os.getenv('CHANNEL_ID')
-        self.youtube = build('youtube', 'v3', developerKey=self.API_KEY)
 
-    def get_videos_from_playlist(self, playlist_id, next_page_token=None):
+class VideosYoutubeCrawler(YouTubeAPI):
+    def __init__(self, playlist_id):
+        super().__init__()
+        self.playlist_id = playlist_id
+
+    def get_videos_from_playlist(self, next_page_token=None):
         try:
             playlist_items = self.youtube.playlistItems().list(
                 part='snippet',
-                playlistId=playlist_id,
+                playlistId=self.playlist_id,
                 maxResults=50,
                 pageToken=next_page_token
             ).execute()
@@ -27,9 +26,8 @@ class VideosYoutubeCrawler:
             print("VideosYoutubeCrawler has an error occurs: ", str(e))
             return None, None
 
-    def crawl_data(self, playlist_id, collection):
+    def crawl_data(self, collection):
         continue_key = read_json('../data/craw/videos_data/state.json')
-
         if continue_key is None:
             page_token = ''
         else:
@@ -37,17 +35,36 @@ class VideosYoutubeCrawler:
         all_videos = []
 
         while True:
-            videos, next_page_token = self.get_videos_from_playlist(playlist_id, page_token)
+            videos, next_page_token = self.get_videos_from_playlist(page_token)
             if videos is None:
                 save_json({'page_token': page_token}, '../data/craw/videos_data/state.json')
                 continue
-            for item in videos:
-                item['playlist_program'] = collection
 
-            all_videos.extend(videos)
+            filtered = self.filterEpisode(videos, collection)
+
+            all_videos.extend(filtered)
             page_token = next_page_token
 
             if not next_page_token:
                 break
         save_merge_json(all_videos, f'../data/craw/videos_data/all_video.json')
+
+    def filterEpisode(self, videos, collection):
+        filteredVideos = []
+
+        # Xác định mẫu regex dựa trên collection
+        if collection == "videoids_rapvie":
+            pattern = r"^Rap Việt Mùa 3 - Tập \d+"
+        else:
+            pattern = r"^Người Ấy Là Ai\? 2023 [^\n]+"
+        for item in videos:
+            item['playlist_program'] = collection
+            title = item["snippet"]["title"]
+
+            # Kiểm tra xem title có khớp với mẫu không
+            matches = re.findall(pattern, title)
+            if matches:
+                filteredVideos.append(item)
+
+        return filteredVideos
 

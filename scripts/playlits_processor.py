@@ -3,7 +3,7 @@ import os
 
 def get_id_playlists(uri_path):
     target_titles = {
-        "Rap Việt": "[ LIVE STAGE ] | Rap Việt Mùa 3 (2023)",
+        "Rap Việt": "RAP VIỆT Mùa 3 (2023) | 20:00 Thứ 7 hàng tuần",
         "Người Ấy Là Ai?": "NGƯỜI ẤY LÀ AI? Mùa 5 (2023) | 20:00 Thứ 6 hàng tuần"
     }
 
