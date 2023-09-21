@@ -1,9 +1,6 @@
 import time
-import pandas as pd
-from googleapiclient.discovery import build
-from dotenv import load_dotenv
 from modules.general_classes import *
-from scripts.YoutubeAPI import YouTubeAPI
+from scripts.crawl.YoutubeAPI import YouTubeAPI
 
 
 class PlaylistsCrawler(YouTubeAPI):
@@ -46,4 +43,4 @@ class PlaylistsCrawler(YouTubeAPI):
 
             if not next_page_token:
                 break
-        save_merge_json(all_playlists, '../data/craw/playlists_channel_data/all_playlist.json')
+        save_merge_json(all_playlists, '../../data/craw/playlists_channel_data/all_playlist.json')

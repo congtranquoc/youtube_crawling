@@ -1,13 +1,11 @@
 # Class thực hiện chạy từng script
 # Lưu ý drop tất cả collection trong mongo và xóa tất cả json trong craw khi chạy scipt main, để cập nhật
-from dotenv import load_dotenv
-from scripts.playlits_processor import *
-from scripts.videos_youtube_crawl import VideosYoutubeCrawler
-from scripts.playlists_youtube_crawl import *
-from scripts.playlits_processor import *
-from scripts.videos_processed import *
+from scripts.crawl.videos_youtube_crawl import VideosYoutubeCrawler
+from scripts.crawl.playlists_youtube_crawl import *
+from scripts.process.playlits_processor import *
+from scripts.process.videos_processed import *
 from mongodb.MongoConnector import *
-from scripts.comment_like_share_cawl import ViewLikeCommentCrawler
+from scripts.crawl.comment_like_share_cawl import ViewLikeCommentCrawler
 
 def main():
     load_dotenv()
@@ -23,7 +21,8 @@ def main():
 
     PlaylistsCrawler(channel_id).crawl_data()
 
-    playlist_ids_rapvie, playlist_ids_nala = get_id_playlists('../data/craw/playlists_channel_data/all_playlist.json')
+    playlist_ids_rapvie, playlist_ids_nala = get_id_playlists(
+        '../../data/craw/playlists_channel_data/all_playlist.json')
 
     #Thực hiện crawl data của tất cả playlist id
     VideosYoutubeCrawler(playlist_ids_rapvie, collection=collection_rapvie).crawl_data()
@@ -32,7 +31,7 @@ def main():
     VideosYoutubeCrawler(playlist_ids_nala, collection=collection_nala).crawl_data()
 
     #Lấy  list ID videos để thực hiện bược tiếp theo crawl dữ liệu từng video
-    video_ids = get_video_ids('../data/craw/videos_data/all_video.json')
+    video_ids = get_video_ids('../../data/craw/videos_data/all_video.json')
 
     ViewLikeCommentCrawler(video_ids).crawl_data()
 

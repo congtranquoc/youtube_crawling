@@ -1,5 +1,5 @@
 from modules.general_classes import *
-from scripts.YoutubeAPI import YouTubeAPI
+from scripts.crawl.YoutubeAPI import YouTubeAPI
 
 
 class ViewLikeCommentCrawler(YouTubeAPI):
@@ -63,5 +63,5 @@ class ViewLikeCommentCrawler(YouTubeAPI):
                         comment["playlist_program"] = item["playlist_program"]
                 list_comment.extend(video_comment)
 
-        save_merge_json(list_statics, '../data/craw/like_share_cmt/video_statics.json')
-        save_merge_json(list_comment, '../data/craw/like_share_cmt/comment_videos.json')
+        save_merge_json(list_statics, '../../data/craw/like_share_cmt/video_statics.json')
+        save_merge_json(list_comment, '../../data/craw/like_share_cmt/comment_videos.json')

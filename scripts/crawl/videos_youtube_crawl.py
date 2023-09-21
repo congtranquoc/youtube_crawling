@@ -1,7 +1,7 @@
 import time
 import re
 from modules.general_classes import *
-from scripts.YoutubeAPI import YouTubeAPI
+from scripts.crawl.YoutubeAPI import YouTubeAPI
 
 
 class VideosYoutubeCrawler(YouTubeAPI):
@@ -49,7 +49,7 @@ class VideosYoutubeCrawler(YouTubeAPI):
 
             if not next_page_token:
                 break
-        save_merge_json(all_videos, f'../data/craw/videos_data/all_video.json')
+        save_merge_json(all_videos, f'../../data/craw/videos_data/all_video.json')
 
     def filterEpisode(self, videos):
         filteredVideos = []
