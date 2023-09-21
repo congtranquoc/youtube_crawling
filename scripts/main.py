@@ -21,29 +21,23 @@ def main():
     collection_rapvie = os.getenv('COLLECTION_RAPVIE')
     collection_nala = os.getenv('COLLECTION_NALA')
 
-    playlists_crawler = PlaylistsCrawler(channel_id)
-    playlists_crawler.crawl_data()
+    PlaylistsCrawler(channel_id).crawl_data()
 
     playlist_ids_rapvie, playlist_ids_nala = get_id_playlists('../data/craw/playlists_channel_data/all_playlist.json')
 
-    #Thực hiện crawl data của tất cả playlist id trên
-    videos_crawler = VideosYoutubeCrawler(playlist_ids_rapvie, collection=collection_rapvie)
-    videos_crawler.crawl_data()
+    #Thực hiện crawl data của tất cả playlist id
+    VideosYoutubeCrawler(playlist_ids_rapvie, collection=collection_rapvie).crawl_data()
 
-    # Thực hiện crawl data của tất cả playlist id trên
-    videos_crawler = VideosYoutubeCrawler(playlist_ids_nala, collection=collection_nala)
-    videos_crawler.crawl_data()
+    # Thực hiện crawl data của tất cả playlist id
+    VideosYoutubeCrawler(playlist_ids_nala, collection=collection_nala).crawl_data()
 
-
-    # #Lấy  list ID videos để thực hiện bược tiếp theo crawl dữ liệu từng video
+    #Lấy  list ID videos để thực hiện bược tiếp theo crawl dữ liệu từng video
     video_ids = get_video_ids('../data/craw/videos_data/all_video.json')
 
-    statics_crawler = ViewLikeCommentCrawler(video_ids)
-    statics_crawler.crawl_data()
+    ViewLikeCommentCrawler(video_ids).crawl_data()
 
     # #Kết nôí database
-    mongo_connection = MongoManager.getInstance()
-    mongo_connection.connect()
+    mongo_connection = MongoManager.getInstance().connect()
     print("Database has been connected")
 
     # đọc file json
