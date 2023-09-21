@@ -9,24 +9,30 @@ from scripts.videos_processed import *
 from mongodb.MongoConnector import *
 from scripts.comment_like_share_cawl import ViewLikeCommentCrawler
 
-COLLECTION_RAPVIE = "videoids_rapvie"
-COLLECTION_NALA = "videoids_nala"
 def main():
     load_dotenv()
+
     #lấy tất cả playlist trong kênh
     channel_id = os.getenv('CHANNEL_ID')
+    collection_playlists = os.getenv('PLAYLISTS')
+    collection_videoids = os.getenv('VIDEOIDS')
+    collection_commentvideo = os.getenv('COMMENTVIDEO')
+    collection_statics = os.getenv('STATICS')
+    collection_rapvie = os.getenv('COLLECTION_RAPVIE')
+    collection_nala = os.getenv('COLLECTION_NALA')
+
     playlists_crawler = PlaylistsCrawler(channel_id)
     playlists_crawler.crawl_data()
 
     playlist_ids_rapvie, playlist_ids_nala = get_id_playlists('../data/craw/playlists_channel_data/all_playlist.json')
 
     #Thực hiện crawl data của tất cả playlist id trên
-    videos_crawler = VideosYoutubeCrawler(playlist_ids_rapvie)
-    videos_crawler.crawl_data(COLLECTION_RAPVIE)
+    videos_crawler = VideosYoutubeCrawler(playlist_ids_rapvie, collection=collection_rapvie)
+    videos_crawler.crawl_data()
 
     # Thực hiện crawl data của tất cả playlist id trên
-    videos_crawler = VideosYoutubeCrawler(playlist_ids_nala)
-    videos_crawler.crawl_data(COLLECTION_NALA)
+    videos_crawler = VideosYoutubeCrawler(playlist_ids_nala, collection=collection_nala)
+    videos_crawler.crawl_data()
 
 
     # #Lấy  list ID videos để thực hiện bược tiếp theo crawl dữ liệu từng video
@@ -49,16 +55,16 @@ def main():
     # #Thực hiện thêm vào database
     if all_playlists:
         print("Insert playlists")
-        mongo_connection.insert_many(all_playlists, "playlists")
+        mongo_connection.insert_many(all_playlists, collection_playlists)
     if all_video_ids:
         print("Insert Video Ids")
-        mongo_connection.insert_many(all_video_ids, "videoids")
+        mongo_connection.insert_many(all_video_ids, collection_videoids)
     if all_comments:
         print("Insert Comments")
-        mongo_connection.insert_many(all_comments, "commentvideo")
+        mongo_connection.insert_many(all_comments, collection_commentvideo)
     if all_statics:
         print("Insert statics")
-        mongo_connection.insert_many(all_statics, "statics")
+        mongo_connection.insert_many(all_statics, collection_statics)
 
 if __name__ == "__main__":
     main()

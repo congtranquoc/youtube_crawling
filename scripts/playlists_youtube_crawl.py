@@ -9,13 +9,12 @@ from scripts.YoutubeAPI import YouTubeAPI
 class PlaylistsCrawler(YouTubeAPI):
     def __init__(self, channel_id):
         super().__init__()
-        self.CHANNEL_ID = channel_id
 
     def get_all_playlists(self, next_page_token=None):
         try:
             response = self.youtube.playlists().list(
                 part='snippet',
-                channelId=self.CHANNEL_ID,
+                channelId=self.channel_id,
                 maxResults=50,
                 pageToken=next_page_token
             ).execute()
