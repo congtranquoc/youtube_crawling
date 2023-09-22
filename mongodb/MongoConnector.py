@@ -51,15 +51,3 @@ class MongoManager:
         if self.client is not None:
             self.client.close()
 
-# Usage:
-if __name__ == "__main__":
-    # Get the singleton instance and connect to MongoDB
-    mongo_connection = MongoManager.getInstance(username='your_username', password='your_password')
-    mongo_connection.connect()
-
-    # Example data insertion
-    data_to_insert = [{"name": "John"}, {"name": "Alice"}]
-    mongo_connection.insert_many(data_to_insert, "my_collection")
-
-    # Close the MongoDB connection when done
-    mongo_connection.close_connection()
