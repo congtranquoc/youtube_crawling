@@ -17,8 +17,8 @@ class MongoManager:
         load_dotenv()
 
         # read environment variables or use default values
-        self.host = os.getenv('HOST', 'localhost')
-        self.database = os.getenv('DATABASE', 'mydb')
+        self.host = os.getenv('HOST')
+        self.database = os.getenv('DATABASE')
 
         # Initialize username and password from kwargs or default to None
         self.username = kwargs.get('username', None)
