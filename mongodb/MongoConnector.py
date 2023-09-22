@@ -1,10 +1,7 @@
 import os
-from urllib.parse import quote_plus
-
 from pymongo import MongoClient
-from envyaml import EnvYAML
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
-
 
 class MongoManager:
     __instance = None
@@ -12,48 +9,57 @@ class MongoManager:
     @staticmethod
     def getInstance(**kwargs):
         if MongoManager.__instance is None:
-            MongoManager.__instance = MongoManager(**kwargs)
+            MongoManager.__instance = object.__new__(MongoManager)
+            MongoManager.__instance.__init__(**kwargs)
         return MongoManager.__instance
 
     def __init__(self, **kwargs):
         load_dotenv()
-        if MongoManager.__instance is not None:
-            raise Exception("This class is a singleton!")
 
-        # read file env.yaml and parse config
-        self.host = os.getenv('HOST')
-        self.database = os.getenv('DATABASE')
+        # read environment variables or use default values
+        self.host = os.getenv('HOST', 'localhost')
+        self.database = os.getenv('DATABASE', 'mydb')
 
-        # Khởi tạo username và password từ kwargs hoặc để giá trị mặc định là None
+        # Initialize username and password from kwargs or default to None
         self.username = kwargs.get('username', None)
         self.password = kwargs.get('password', None)
 
         self.mongo = None
         self.client = None
-        MongoManager.__instance = self
 
     def connect(self):
-        # create string to connection mongodb
+        # create connection string for MongoDB
         if self.username and self.password:
             connection_string = f"mongodb://{quote_plus(self.username)}:{quote_plus(self.password)}@{self.host}:27017"
         else:
             connection_string = f"mongodb://{self.host}:27017"
 
-        # connection
+        # connect to MongoDB
         self.client = MongoClient(connection_string)
         self.mongo = self.client[self.database]
 
     def is_connected(self):
-        if self.client is not None:
-            return True
-        return False
+        return self.client is not None
 
-    def insert_many(self, datas, collection):
+    def insert_many(self, data, collection):
         if not self.is_connected():
             self.connect()
         database = self.mongo.get_collection(collection)
-        database.insert_many(datas)
+        database.insert_many(data)
 
     def close_connection(self):
         if self.client is not None:
             self.client.close()
+
+# Usage:
+if __name__ == "__main__":
+    # Get the singleton instance and connect to MongoDB
+    mongo_connection = MongoManager.getInstance(username='your_username', password='your_password')
+    mongo_connection.connect()
+
+    # Example data insertion
+    data_to_insert = [{"name": "John"}, {"name": "Alice"}]
+    mongo_connection.insert_many(data_to_insert, "my_collection")
+
+    # Close the MongoDB connection when done
+    mongo_connection.close_connection()

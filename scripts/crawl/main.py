@@ -35,9 +35,10 @@ def main():
 
     ViewLikeCommentCrawler(video_ids).crawl_data()
 
-    # #Kết nôí database
-    mongo_connection = MongoManager.getInstance().connect()
-    print("Database has been connected")
+    #Kết nôí database
+
+    mongo_connection = MongoManager.getInstance()
+    mongo_connection.connect()
 
     # đọc file json
     all_playlists = read_json('../data/craw/playlists_channel_data/all_playlist.json')
