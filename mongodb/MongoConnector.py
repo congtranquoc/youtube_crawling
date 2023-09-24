@@ -57,3 +57,4 @@ class MongoManager:
     def close_connection(self):
         if self.client is not None:
             self.client.close()
+
