@@ -5,7 +5,7 @@ cloud_conn = models.Connection(
     conn_id="gcp_connection_key",
     conn_type="google_cloud_platform",
     extra={"extra__google_cloud_platform__project": "zinc-forge-399014",
-          "extra__google_cloud_platform__key_path": "/home/quoccong-workspace/airflow_project/gcp-connection/key_service.json"}
+          "extra__google_cloud_platform__key_path": "/home/SEHC/airflow_project/gcp-connection/key_service.json"}
 )
 
 # Add the connection to Airflow

@@ -19,7 +19,7 @@ default_dag_args = {
 }
 
 # Define dag
-dag = DAG('newegg-cloud-data-lake-pipeline',
+dag = DAG('youtube-cloud-data-lake-pipeline',
             schedule_interval = "0 5 * * *",
             default_args=default_dag_args)
 
@@ -30,19 +30,19 @@ start_pipeline = DummyOperator(
 
 crawl_data = bash_operator.BashOperator(
     task_id="craw_datas",
-    bash_command="python3 /home/quoccong-workspace/airflow_project/scripts/crawl/main.py ",
+    bash_command="python3 /home/SEHC/airflow_project/scripts/crawl/main.py ",
     dag=dag,
 )
 
 extract_data = bash_operator.BashOperator(
     task_id="extract_data",
-    bash_command="bash /home/quoccong-workspace/airflow_project/scripts/shell/extract_data.sh ",
+    bash_command="bash /home/SEHC/airflow_project/scripts/shell/extract_data.sh ",
     dag=dag,
 )
 
 migrate_data = bash_operator.BashOperator(
-    task_id="extract_data",
-    bash_command="bash /home/quoccong-workspace/airflow_project/scripts/shell/migrate_data.sh ",
+    task_id="migrate_data",
+    bash_command="bash /home/SEHC/airflow_project/scripts/shell/migrate_data.sh ",
     dag=dag,
 )
 

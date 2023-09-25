@@ -1,9 +1,6 @@
-from types import SimpleNamespace
 import json
 import os
 import pandas as pd
-# using numpy
-import numpy as np
 
 def save_csv(df,file):
     if os.path.exists(os.path.join('./data/craw', file)):
