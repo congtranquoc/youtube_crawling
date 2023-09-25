@@ -2,18 +2,13 @@
 # Lưu ý drop tất cả collection trong mongo và xóa tất cả json trong craw khi chạy scipt main, để cập nhật
 from scripts.crawl.videos_youtube_crawl import VideosYoutubeCrawler
 from scripts.crawl.playlists_youtube_crawl import *
-from scripts.process.playlits_processor import *
-from scripts.process.videos_processed import *
 from mongodb.MongoConnector import *
-from mongodb.mining_data import *
 from scripts.crawl.comment_like_share_cawl import ViewLikeCommentCrawler
 
 
 def main():
     load_dotenv()
-    #
-    # # lấy tất cả playlist trong kênh
-    channel_id = os.getenv('CHANNEL_ID')
+
     collection_playlists = os.getenv('PLAYLISTS')
     collection_videoids = os.getenv('VIDEOIDS')
     collection_commentvideo = os.getenv('COMMENTVIDEO')
@@ -21,56 +16,51 @@ def main():
     collection_rapvie = os.getenv('COLLECTION_RAPVIE')
     collection_nala = os.getenv('COLLECTION_NALA')
 
-    PlaylistsCrawler(channel_id).crawl_data()
-
-    playlist_ids_rapvie, playlist_ids_nala = get_id_playlists(
-        '../../data/craw/playlists_channel_data/all_playlist.json')
-
-    # Thực hiện crawl data của tất cả playlist id
-    VideosYoutubeCrawler(playlist_ids_rapvie, collection=collection_rapvie).crawl_data()
-
-    # Thực hiện crawl data của tất cả playlist id
-    VideosYoutubeCrawler(playlist_ids_nala, collection=collection_nala).crawl_data()
-
-    # Lấy list ID videos để thực hiện bược tiếp theo crawl dữ liệu từng video
-    video_ids = get_video_ids('../../data/craw/videos_data/all_video.json')
-
-    ViewLikeCommentCrawler(video_ids).crawl_data()
-
     #Kết nôí database
     mongo_connection = MongoManager.getInstance()
     mongo_connection.connect()
 
-    # Xử lý dữ liệu
-    mining_all_playlists = '../../data/craw/playlists_channel_data/all_playlist.json'
-    mining_all_video = '../../data/craw/videos_data/all_video.json'
-    mining_video_statics = '../../data/craw/like_share_cmt/video_statics.json'
-    mining_comment_video = '../../data/craw/like_share_cmt/comment_videos.json'
-    mining_data(mining_all_playlists, 'all_playlist')
-    mining_data(mining_all_video, 'all_video')
-    mining_data(mining_video_statics, 'video_statics')
-    mining_data(mining_comment_video, 'comment_videos')
-
-    # Đọc file json
-    all_playlists = read_json('../../data/craw/playlists_channel_data/new_all_playlist.json')
-    all_video_ids = read_json('../../data/craw/videos_data/new_all_video.json')
-    all_comments = read_json('../../data/craw/like_share_cmt/new_comment_videos.json')
-    all_statics = read_json('../../data/craw/like_share_cmt/new_video_statics.json')
-
+    all_playlists = PlaylistsCrawler().crawl_data()
 
     # Thực hiện thêm vào database
     if all_playlists:
         print("Insert playlists")
         mongo_connection.insert_many(all_playlists, collection_playlists)
-    if all_video_ids:
-        print("Insert Video Ids")
-        mongo_connection.insert_many(all_video_ids, collection_videoids)
-    if all_comments:
-        print("Insert Comments")
-        mongo_connection.insert_many(all_comments, collection_commentvideo)
-    if all_statics:
-        print("Insert statics")
-        mongo_connection.insert_many(all_statics, collection_statics)
+
+    playlist_ids_rapvie, playlist_ids_nala = mongo_connection.get_data_from_playlist()
+
+    if playlist_ids_rapvie:
+        # Thực hiện crawl data của tất cả playlist id
+        all_rapvie_videos = VideosYoutubeCrawler(playlist_ids_rapvie, collection=collection_rapvie).crawl_data()
+
+        # Thực hiện thêm vào database
+        if all_rapvie_videos:
+            print("Insert all_rapvie_videos")
+            mongo_connection.insert_many(all_rapvie_videos, collection_videoids)
+
+    if playlist_ids_nala:
+        # Thực hiện crawl data của tất cả playlist id
+        all_nala_videos = VideosYoutubeCrawler(playlist_ids_nala, collection=collection_nala).crawl_data()
+        # Thực hiện thêm vào database
+        if all_nala_videos:
+            print("Insert all_nala_videos")
+            mongo_connection.insert_many(all_nala_videos, collection_videoids)
+
+    # Lấy list ID videos để thực hiện bược tiếp theo crawl dữ liệu từng video
+    video_ids = mongo_connection.get_data(collection_videoids)
+
+    if video_ids:
+        #Thực hiện crawl comment dựa trên list video ids
+        list_statics, list_comment = ViewLikeCommentCrawler(video_ids).crawl_data()
+        # Thực hiện thêm vào database
+        if list_statics:
+            print("Insert list_statics")
+            mongo_connection.insert_many(list_statics, collection_statics)
+
+        # Thực hiện thêm vào database
+        if list_comment:
+            print("Insert list_comment")
+            mongo_connection.insert_many(list_comment, collection_commentvideo)
 
 if __name__ == "__main__":
     main()

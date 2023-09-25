@@ -19,16 +19,16 @@ class VideosYoutubeCrawler(YouTubeAPI):
                 pageToken=next_page_token
             ).execute()
 
-            _videos = playlist_items['items']
+            _videos = self.data_mining(playlist_items['items'], kind=playlist_items['kind'])
             _next_page_token = playlist_items.get('nextPageToken')
-            time.sleep(1)
+
             return _videos, _next_page_token
         except Exception as e:
             print("VideosYoutubeCrawler has an error occurs: ", str(e))
             return None, None
 
     def crawl_data(self):
-        continue_key = read_json('../data/craw/videos_data/state.json')
+        continue_key = read_json('../../data/videos_state.json')
 
         if continue_key is None:
             page_token = ''
@@ -39,34 +39,34 @@ class VideosYoutubeCrawler(YouTubeAPI):
         while True:
             videos, next_page_token = self.get_videos_from_playlist(page_token)
             if videos is None:
-                save_json({'page_token': page_token}, '../data/craw/videos_data/state.json')
+                save_json({'page_token': page_token}, '../../data/videos_state.json')
                 continue
 
-            filtered = self.filterEpisode(videos)
-
-            all_videos.extend(filtered)
+            all_videos.extend(videos)
             page_token = next_page_token
 
             if not next_page_token:
                 break
-        save_merge_json(all_videos, f'../../data/craw/videos_data/all_video.json')
+        return all_videos
 
-    def filterEpisode(self, videos):
-        filteredVideos = []
+    def data_mining(self, response_data, **kwargs):
+        kind = kwargs.get('kind', '')
+        if kind == 'youtube#playlistItemListResponse':
+            _videos = []
+            pattern = r"^Rap Việt Mùa 3 - Tập \d+" if self.collection == "videoids_rapvie" else r"^Người Ấy Là Ai\? 2023 [^\n]+"
 
-        # Xác định mẫu regex dựa trên collection
-        if self.collection == "videoids_rapvie":
-            pattern = r"^Rap Việt Mùa 3 - Tập \d+"
+            for item in response_data:
+                title = item["snippet"]["title"]
+
+                matches = re.findall(pattern, title)
+                if matches:
+                    title = title.split(" - ", 1)[-1].lstrip("0123456789.- ")
+                    _videos.append({
+                        "id": item["id"],
+                        "video_id": item["snippet"]["resourceId"]["videoId"],
+                        "video_title": title,
+                        "playlist_program": self.collection
+                    })
+            return _videos
         else:
-            pattern = r"^Người Ấy Là Ai\? 2023 [^\n]+"
-        for item in videos:
-            item['playlist_program'] = self.collection
-            title = item["snippet"]["title"]
-
-            # Kiểm tra xem title có khớp với mẫu không
-            matches = re.findall(pattern, title)
-            if matches:
-                filteredVideos.append(item)
-
-        return filteredVideos
-
+            raise ValueError("This is not correct response.")

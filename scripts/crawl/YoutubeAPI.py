@@ -9,5 +9,8 @@ class YouTubeAPI:
         self.youtube = build('youtube', 'v3', developerKey=self.API_KEY)
         self.channel_id = os.getenv('CHANNEL_ID')
 
-    def craw_data(self):
+    def crawl_data(self):
+        pass
+
+    def data_mining(self, response_data, **kwargs):
         pass
