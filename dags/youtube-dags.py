@@ -5,7 +5,7 @@ from airflow.utils.dates import days_ago
 from airflow.operators.dummy_operator import DummyOperator
 
 # Define dag variables
-project_id = 'manifest-setup-397505'
+project_id = 'zinc-forge-399014'
 staging_dataset = 'youtube_dwh_staging'
 dwh_dataset = 'youtube_dwh_production'
 gs_bucket = 'bigdata-python'
