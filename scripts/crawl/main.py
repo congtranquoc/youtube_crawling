@@ -5,12 +5,14 @@ from scripts.crawl.playlists_youtube_crawl import *
 from scripts.process.playlits_processor import *
 from scripts.process.videos_processed import *
 from mongodb.MongoConnector import *
+from mongodb.mining_data import *
 from scripts.crawl.comment_like_share_cawl import ViewLikeCommentCrawler
+
 
 def main():
     load_dotenv()
-
-    #lấy tất cả playlist trong kênh
+    #
+    # # lấy tất cả playlist trong kênh
     channel_id = os.getenv('CHANNEL_ID')
     collection_playlists = os.getenv('PLAYLISTS')
     collection_videoids = os.getenv('VIDEOIDS')
@@ -24,29 +26,39 @@ def main():
     playlist_ids_rapvie, playlist_ids_nala = get_id_playlists(
         '../../data/craw/playlists_channel_data/all_playlist.json')
 
-    #Thực hiện crawl data của tất cả playlist id
+    # Thực hiện crawl data của tất cả playlist id
     VideosYoutubeCrawler(playlist_ids_rapvie, collection=collection_rapvie).crawl_data()
 
     # Thực hiện crawl data của tất cả playlist id
     VideosYoutubeCrawler(playlist_ids_nala, collection=collection_nala).crawl_data()
 
-    #Lấy  list ID videos để thực hiện bược tiếp theo crawl dữ liệu từng video
+    # Lấy list ID videos để thực hiện bược tiếp theo crawl dữ liệu từng video
     video_ids = get_video_ids('../../data/craw/videos_data/all_video.json')
 
     ViewLikeCommentCrawler(video_ids).crawl_data()
 
     #Kết nôí database
-
     mongo_connection = MongoManager.getInstance()
     mongo_connection.connect()
 
-    # đọc file json
-    all_playlists = read_json('../data/craw/playlists_channel_data/all_playlist.json')
-    all_video_ids = read_json('../data/craw/videos_data/all_video.json')
-    all_comments = read_json('../data/craw/like_share_cmt/comment_videos.json')
-    all_statics = read_json('../data/craw/like_share_cmt/video_statics.json')
+    # Xử lý dữ liệu
+    mining_all_playlists = '../../data/craw/playlists_channel_data/all_playlist.json'
+    mining_all_video = '../../data/craw/videos_data/all_video.json'
+    mining_video_statics = '../../data/craw/like_share_cmt/video_statics.json'
+    mining_comment_video = '../../data/craw/like_share_cmt/comment_videos.json'
+    mining_data(mining_all_playlists, 'all_playlist')
+    mining_data(mining_all_video, 'all_video')
+    mining_data(mining_video_statics, 'video_statics')
+    mining_data(mining_comment_video, 'comment_videos')
 
-    # #Thực hiện thêm vào database
+    # Đọc file json
+    all_playlists = read_json('../../data/craw/playlists_channel_data/new_all_playlist.json')
+    all_video_ids = read_json('../../data/craw/videos_data/new_all_video.json')
+    all_comments = read_json('../../data/craw/like_share_cmt/new_comment_videos.json')
+    all_statics = read_json('../../data/craw/like_share_cmt/new_video_statics.json')
+
+
+    # Thực hiện thêm vào database
     if all_playlists:
         print("Insert playlists")
         mongo_connection.insert_many(all_playlists, collection_playlists)

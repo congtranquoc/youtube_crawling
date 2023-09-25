@@ -4,7 +4,7 @@ from pymongo import MongoClient
 # Tham số kết nối MongoDB
 mongo_uri = "mongodb://localhost:27017/"
 database_name = "youtube_db"
-collection_names = ["commentvideo", "playlists", "statics", "videoids"]
+collection_names = ["playlists", "statics", "videoids"]
 
 # Kết nối tới MongoDB
 client = MongoClient(mongo_uri)
@@ -18,20 +18,10 @@ for collection_name in collection_names:
     data_dict[collection_name] = pd.DataFrame(list(cursor))
 
 # Bạn có thể truy cập dữ liệu từng bộ sưu tập thông qua dictionary
-commentvideo_data = data_dict["commentvideo"]
-playlists_data = data_dict["playlists"]
 statics_data = data_dict["statics"]
 videoids_data = data_dict["videoids"]
 
-# In dữ liệu từng bộ sưu tập
-print("commentvideo_data:")
-print(commentvideo_data)
-
-print("\nplaylists_data:")
-print(playlists_data)
-
-print("\nstatics_data:")
-print(statics_data)
-
-print("\nvideoids_data:")
-print(videoids_data)
+videoids_data = videoids_data[['playlist_program','']]
+statics_data = statics_data[['video_id', 'view_count', 'like_count', 'comment_count']]
+# Kết hợp hai bảng statics_data và videoids_data theo thuộc tính video_id
+merged_data = statics_data.merge(videoids_data, on='video_id', how='inner')
