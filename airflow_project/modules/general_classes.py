@@ -3,13 +3,13 @@ import os
 import pandas as pd
 
 def save_csv(df,file):
-    if os.path.exists(os.path.join('./data/craw', file)):
-        saved_df = pd.read_csv(os.path.join('./data/craw', file), on_bad_lines='skip').drop_duplicates() #Open file
+    if os.path.exists(file):
+        saved_df = pd.read_csv(os.path.join(file), on_bad_lines='skip').drop_duplicates() #Open file
         frames = [df, saved_df]
         df_final = pd.concat(frames)
-        df_final.to_csv(os.path.join('./data/craw', file), encoding='utf-8-sig',index=False)
+        df_final.to_csv(os.path.join(file), encoding='utf-8-sig',index=False)
     else:
-        df.to_csv(os.path.join('./data/craw', file), encoding='utf-8-sig',index=False)
+        df.to_csv(os.path.join(file), encoding='utf-8-sig',index=False)
 
 
 def save_json(new_json_data, uri_path):

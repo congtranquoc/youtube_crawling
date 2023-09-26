@@ -2,3 +2,4 @@ pip3 install --upgrade google-api-python-client
 pip3 install python-dotenv
 pip3 install pandas
 pip install pymongo
+pip install google-cloud-storage

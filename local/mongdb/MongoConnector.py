@@ -45,7 +45,7 @@ class MongoManager:
         if not self.is_connected():
             self.connect()
         database = self.mongo.get_collection(collection)
-        database.insert_many(data)
+        database.insert_many(data, ordered=False)
 
     #Hàm lấy tất cả data của collection chỉ định
     def get_data(self, collection_name):

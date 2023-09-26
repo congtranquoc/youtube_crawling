@@ -8,16 +8,10 @@ COLLECTIONS=("playlists" "videoids" "commentvideo" "statics")
 export_data() {
     COLLECTION=$1
     FILE="/home/SEHC/airflow_project/data/${COLLECTION}_export.json"
-    TEMP_FILE="/home/SEHC/airflow_project/data/${COLLECTION}_export_temp.json"
 
     echo "Exporting data from collection '$COLLECTION' to file '$FILE'..."
-    mongoexport --db "$DATABASE" --collection "$COLLECTION" > "$TEMP_FILE"
-
-    echo "Ensuring valid JSON formatting using jq..."
-    jq -c '.' "$TEMP_FILE" > "$FILE"
-
-    echo "Cleaning up temporary file..."
-    rm "$TEMP_FILE"
+    mongoexport --db "$DATABASE" --collection "$COLLECTION"  --jsonArray |\
+      jq 'map(del(._id))' > "$FILE"
 }
 
 # Check if MongoDB service is running
