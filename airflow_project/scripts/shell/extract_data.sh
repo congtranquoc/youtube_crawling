@@ -7,8 +7,8 @@ COLLECTIONS=("playlists" "videoids" "commentvideo" "statics")
 # Function to export data from MongoDB and ensure valid JSON formatting
 export_data() {
     COLLECTION=$1
-    FILE="/home/quoccong-workspace/airflow_project/data/${COLLECTION}_export.json"
-    TEMP_FILE="/home/quoccong-workspace/airflow_project/data/${COLLECTION}_export_temp.json"
+    FILE="/home/SEHC/airflow_project/data/${COLLECTION}_export.json"
+    TEMP_FILE="/home/SEHC/airflow_project/data/${COLLECTION}_export_temp.json"
 
     echo "Exporting data from collection '$COLLECTION' to file '$FILE'..."
     mongoexport --db "$DATABASE" --collection "$COLLECTION" > "$TEMP_FILE"
