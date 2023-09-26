@@ -1,5 +1,4 @@
-from modules.general_classes import *
-from scripts.crawl.YoutubeAPI import YouTubeAPI
+from airflow_project.scripts.crawl.YoutubeAPI import YouTubeAPI
 
 
 class ViewLikeCommentCrawler(YouTubeAPI):

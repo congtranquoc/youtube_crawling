@@ -1,8 +1,10 @@
 import tkinter as tk
 import pandas as pd
+import os
 from tkinter import *
 from tkinter import ttk
-from mongodb.MongoConnector import *
+from dotenv import load_dotenv
+from local.mongdb.MongoConnector import MongoManager
 
 
 class UI():

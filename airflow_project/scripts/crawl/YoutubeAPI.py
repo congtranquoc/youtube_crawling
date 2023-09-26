@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
-from modules.general_classes import *
+from airflow_project.modules.general_classes import *
 
 class YouTubeAPI:
     def __init__(self):

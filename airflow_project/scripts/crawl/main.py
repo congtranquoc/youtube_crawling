@@ -1,9 +1,8 @@
 # Class thực hiện chạy từng script
 # Lưu ý drop tất cả collection trong mongo và xóa tất cả json trong craw khi chạy scipt main, để cập nhật
-from scripts.crawl.videos_youtube_crawl import VideosYoutubeCrawler
-from scripts.crawl.playlists_youtube_crawl import *
-from mongodb.MongoConnector import *
-from scripts.crawl.comment_like_share_cawl import ViewLikeCommentCrawler
+from airflow_project.scripts.crawl.videos_youtube_crawl import VideosYoutubeCrawler
+from airflow_project.mongodb.MongoConnector import *
+from airflow_project.scripts.crawl.comment_like_share_cawl import ViewLikeCommentCrawler
 
 
 def main():

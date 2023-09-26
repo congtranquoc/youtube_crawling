@@ -1,7 +1,6 @@
-import time
 import re
-from modules.general_classes import *
-from scripts.crawl.YoutubeAPI import YouTubeAPI
+from airflow_project.modules.general_classes import *
+from airflow_project.scripts.crawl.YoutubeAPI import YouTubeAPI
 
 
 class VideosYoutubeCrawler(YouTubeAPI):
@@ -28,7 +27,7 @@ class VideosYoutubeCrawler(YouTubeAPI):
             return None, None
 
     def crawl_data(self):
-        continue_key = read_json('../../data/videos_state.json')
+        continue_key = read_json('../../airflow_project/data/videos_state.json')
 
         if continue_key is None:
             page_token = ''
@@ -39,7 +38,7 @@ class VideosYoutubeCrawler(YouTubeAPI):
         while True:
             videos, next_page_token = self.get_videos_from_playlist(page_token)
             if videos is None:
-                save_json({'page_token': page_token}, '../../data/videos_state.json')
+                save_json({'page_token': page_token}, '../../airflow_project/data/videos_state.json')
                 continue
 
             all_videos.extend(videos)
