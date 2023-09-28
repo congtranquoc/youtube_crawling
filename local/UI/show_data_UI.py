@@ -24,7 +24,7 @@ class UI():
 
     # Hàm để tạo Treeview cho một tab
     def create_tab_treeview_with_data(self, tab, data):
-        # Tạo Treeview cho tab
+        # Tạo Treeview
         tree = ttk.Treeview(tab, show='headings')
         tree["columns"] = ["video_title", "like_count", "view_count", "comment_count"]
 
@@ -55,7 +55,7 @@ class UI():
         tab_view_count = 0
         tab_comment_count = 0
 
-        # Cập nhật các biến này khi duyệt qua DataFrame
+        # Cập nhật khi duyệt qua DataFrame
         for index, row in data.iterrows():
             try:
                 tab_video_count += 1
@@ -65,7 +65,7 @@ class UI():
             except ValueError:
                 pass
 
-        # Thêm các nhãn để hiển thị các tổng số này trong tab
+        # Thống kê
         label_video_count = ttk.Label(tab, text="Tổng số video: {}".format(tab_video_count))
         label_video_count.pack(pady=(20, 0))
         label_like_count = ttk.Label(tab, text=f"Tổng số lượt thích: {tab_like_count:,}")
@@ -77,7 +77,7 @@ class UI():
 
         tree.pack(fill="both", expand=True)
 
-    # Hàm để load dữ liệu
+    # Load dữ liệu
     def load_data(self):
         # Tạo DataFrame từ danh sách dữ liệu
         df_video = pd.DataFrame(self.video_datas)
@@ -94,7 +94,7 @@ class UI():
 
         return result
 
-    # Hàm để tạo và hiển thị tab
+    # Tạo tab
     def create_tabs(self, data):
         window = tk.Tk()
         window.title("Phân loại dữ liệu từ MongoDB")

@@ -21,7 +21,9 @@ for collection_name in collection_names:
 statics_data = data_dict["statics"]
 videoids_data = data_dict["videoids"]
 
-videoids_data = videoids_data[['playlist_program','']]
+videoids_data = videoids_data[['video_id', 'video_title', 'playlist_program']]
 statics_data = statics_data[['video_id', 'view_count', 'like_count', 'comment_count']]
 # Kết hợp hai bảng statics_data và videoids_data theo thuộc tính video_id
 merged_data = statics_data.merge(videoids_data, on='video_id', how='inner')
+# Tạo DataFrame cho merged_data
+merged_data_df = pd.DataFrame(merged_data)
